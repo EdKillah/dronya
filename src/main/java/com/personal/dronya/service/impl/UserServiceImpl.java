@@ -1,5 +1,7 @@
 package com.personal.dronya.service.impl;
 
+import javax.swing.text.html.Option;
+
 import com.personal.dronya.model.dto.dron.DroneDTO;
 import com.personal.dronya.model.dto.user.UserDTO;
 import com.personal.dronya.model.dto.user_dron.UserDroneDTO;
@@ -63,15 +65,20 @@ public class UserServiceImpl implements IUserService {
 
         User userDB = userDBOptional.get();
         Drone droneDB = droneDBOptional.get();
-        droneDB.setStatus(DroneStatus.RENTED);
+
 
         //UserDB
         UserDroneID userDroneId = UserDroneID.builder().userId(userId).droneId(droneId).build();
         if (userDroneRepository.findById(userDroneId).isPresent()) {
-            return String.format("El usuario %s ya tiene rentado el dron: %s.", userId, droneId);
+            return String.format("User with id %s already has rented drone wit id: %s.", userId, droneId);
         }
-
+        System.out.println("Drone status rented: "+DroneStatus.RENTED);
+        System.out.println("Drone status db: "+droneDBOptional.get().getStatus());
+        if (DroneStatus.RENTED.equals(droneDBOptional.get().getStatus())) {
+            return String.format("Drone with id: %s is already rented", droneId);
+        }
         UserDrone userDrone = UserDrone.builder().userDroneId(userDroneId).user(userDB).drone(droneDB).build();
+        droneDB.setStatus(DroneStatus.RENTED);
         droneDB.setRentedBy(userDrone);
         System.out.println("User drone DB: "+droneDB.getRentedBy());
         //userDroneRepository.save(userDrone);
@@ -94,13 +101,20 @@ public class UserServiceImpl implements IUserService {
         User userDB = userDBOptional.get();
         Drone droneDB = droneDBOptional.get();
         droneDB.setStatus(DroneStatus.AVAILABLE);
+        droneDB.setRentedBy(null);
         UserDroneID userDroneId = UserDroneID.builder().userId(userId).droneId(droneId).build();
-        Optional<UserDrone> userDrone = userDroneRepository.findById(userDroneId);
-        if (userDrone.isEmpty()) {
+        Optional<UserDrone> userDroneOptional = userDroneRepository.findById(userDroneId);
+        if (userDroneOptional.isEmpty()) {
             return String.format("User with id %s has not rented drone with id: %s.", userId, droneId);
         }
+        UserDrone userDrone = userDroneOptional.get();
+
         droneRepository.save(droneDB);
-        userDroneRepository.deleteById(userDroneId);
+        //TODO: esto no puede ser null porque quiero mantener las demas relaciones con los otros drones rentados
+        //TODO: al parecer si funciona no sé como pero funciona. seria mejor usar el predelete en la entity
+        userDB.setDroneRented(null);
+        userRepository.save(userDB);
+        userDroneRepository.delete(userDrone);
         System.out.println("FIND IN DB: "+userDroneRepository.findById(userDroneId));
         return "Drone has been unrented successfully.";
     }

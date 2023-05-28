@@ -95,7 +95,7 @@ public class DroneServiceImpl implements IDroneService {
         if (droneChargingStation.isEmpty()) {
             return String.format("Drone wit id: %s is not registered in charging station with id: %s", droneId, chargingStationId);
         }
-        droneChargingStationRepository.deleteById(droneChargingStationID);
+        droneChargingStationRepository.delete(droneChargingStation.get());
         return "Drone removed successfully.";
     }
 

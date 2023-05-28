@@ -25,13 +25,13 @@ public class Drone {
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, cascade={CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REMOVE})
     private UserDrone rentedBy;
 
-    @ToString.Exclude
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, cascade={CascadeType.PERSIST})
-    private DroneChargingStation station;
+    //@ToString.Exclude
+    ////@JsonIgnore
+    ////@OneToOne(fetch = FetchType.LAZY, cascade={CascadeType.DETACH})
+    //private DroneChargingStation station;
 
 
     @Override

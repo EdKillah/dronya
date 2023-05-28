@@ -3,7 +3,6 @@ package com.personal.dronya.controller;
 import com.personal.dronya.model.entity.Drone;
 import com.personal.dronya.service.IDroneService;
 import java.util.Objects;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

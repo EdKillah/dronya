@@ -16,7 +16,7 @@ public class UserDrone {
     private UserDroneID userDroneId;
 
     @MapsId("userId")
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH}, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH}, fetch = FetchType.EAGER)
     private User user;
 
 

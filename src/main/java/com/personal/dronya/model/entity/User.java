@@ -24,7 +24,7 @@ public class User {
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(cascade={CascadeType.PERSIST}, mappedBy = "user", orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
     private List<UserDrone> droneRented;
 
 
